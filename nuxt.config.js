@@ -19,11 +19,16 @@ module.exports = {
     ],
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ['~/plugins/css/main.css'],
 
   plugins: [],
 
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', 'vue-sweetalert2/nuxt'],
+  
+  sweetalert: {
+    confirmButtonColor: '#41b882',
+    cancelButtonColor: '#ff7674'
+  },
 
   build: {}
 }

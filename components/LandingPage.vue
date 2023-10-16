@@ -8,18 +8,19 @@
     </div>
 
     <section class="create-todo">
-      <TaskInput />
+      <TodoInput />
     </section>
   </div>
 </template>
 
 <script>
-import TaskInput from './TaskInput.vue'
+import TodoInput from '../components/TodoInput.vue'
 
 export default {
-  components: { TaskInput },
+  // components: { LandingPage }
+  components: { TodoInput },
   async fetch({ store }) {
-    await store.dispatch('tasks/setTasks')
+    await store.dispatch('todos/setTodos')
   }
 }
 </script>

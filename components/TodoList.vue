@@ -15,9 +15,9 @@
         <input type="text" v-model="searchTasks" placeholder="search" @keyup.enter="save" autocomplete="false">
     </div>
 
-    <template v-for="task in searchResultsList">
-      <div :key="task.id">
-        <TaskItem :task="task" />
+    <template v-for="todo in searchResultsList">
+      <div :key="todo.id">
+        <TodoItem :todo="todo" />
       </div>
     </template>
   </div>
@@ -25,11 +25,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TaskItem from '@/components/TaskItem'
+import TodoItem from '@/components/TodoItem'
 
 export default {
-  name: 'TaskList',
-  components: { TaskItem },
+  name: 'TodoList',
+  components: { TodoItem },
   data() {
     return {
       filters: ['All', 'Important', 'Done'],
@@ -42,20 +42,20 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('tasks', ['tasks']),
-    filteredTasks() {
-      this.searchResultsList = this.tasks
+    ...mapGetters('todos', ['todos']),
+    filteredTodos() {
+      this.searchResultsList = this.todos
       return this.searchResultsList;
     },
     allTodosDone() {
       return (
-        this.tasks.filter(task => task.is_done).length === this.tasks.length
+        this.todos.filter(todo => todo.is_done).length === this.todos.length
       )
     },
   },
   methods: {
     init: function() {
-      this.storedData = this.tasks; 
+      this.storedData = this.todos; 
       this.loading = false;
     },
     searchDataFilter () {
@@ -75,16 +75,16 @@ export default {
     filterButton(typeOfFilter){
       console.log(typeOfFilter)
       if (typeOfFilter === 'Important'){
-        this.searchResultsList = this.tasks.filter(task => !task.is_important)
+        this.searchResultsList = this.todos.filter(todo => !todo.is_important)
         return  this.searchResultsList;
       }
       if (typeOfFilter === 'Done'){
-        this.searchResultsList = this.tasks.filter(task => task.is_done)
+        this.searchResultsList = this.todos.filter(todo => todo.is_done)
 
         return  this.searchResultsList;
       }
       if (typeOfFilter === 'All'){
-        this.searchResultsList = this.tasks
+        this.searchResultsList = this.todos
         return this.searchResultsList;
       }
     }
@@ -97,7 +97,7 @@ export default {
   mounted() {
     this.loading = true;
     this.init();
-    this.filteredTasks;
+    this.filteredTodos;
   }
 }
 </script>
@@ -144,6 +144,7 @@ export default {
   color: aliceblue;
   border-radius: 10px;
 }
+
 .search-bar {
     background-color: #FFF;
     display: -webkit-box;
@@ -174,6 +175,7 @@ export default {
             flex-grow: 1;
     margin: 10px;
 }
+
 input {
     margin: 5px 5px;
     width: 90%;
@@ -186,4 +188,5 @@ input {
         -ms-flex-positive: 2;
             flex-grow: 2;
 }
+
 </style>

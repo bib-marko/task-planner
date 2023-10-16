@@ -1,40 +1,43 @@
 <template>
-  <TaskActions>
-    <template slot-scope="{ load, taskActions }">
+  <TodoActions>
+    <template slot-scope="{ load, todoActions }">
       <ul :class="`choice-list todo-item ${taskStatus && 'done'}`">
         <li class="choice-list__item task-card-item">
           <input
-            :id="`checkbox-${task.id}`"
+            :id="`checkbox-${todo.id}`"
             type="checkbox"
             class="checkbox"
             @click="checkTask(taskStatus)"
           />
-          <label :for="`checkbox-${task.id}`" class="todo-content">
+          <label :for="`checkbox-${todo.id}`" class="todo-content">
             <div class="task-content">
-              <span>{{ task.title }}</span>
+              <span>{{ todo.title }}</span>
             </div>
           </label>
           <span class="choice-list__aside">
-            <img v-show="task.assignee.avatar" :src="task.assignee.avatar" alt="Italian Trulli" @click="getUsersData" >
+            <img v-show="todo.assignee.avatar" :src="todo.assignee.avatar" alt="Italian Trulli" @click="getUsersData" >
             <div v-show="pop === true" class="box">
+            <!-- <h3>{{ users }}</h3> -->
               <div class="search-bar">
                   <i class="fa fa-search" aria-hidden="true"></i>
-                  <input type="text" v-model="searchTasks" placeholder="Search Team Member" @keyup.enter="save" autocomplete="false">
+                  <input type="text" v-model="searchTasks" placeholder="search" @keyup.enter="save" autocomplete="false">
               </div>
-              <ul style="margin: .5em 0 0 -3em">
-                <li class="flex-container" v-for="(user, i) in searchResultsList" :key="i" style="margin: .3em 0 0 0;">
+              <ul class="" style="margin: .5em 0 0 -3em">
+                <li class="task-card-item" v-for="(user, i) in searchResultsList" :key="i" style="margin: .3em 0 0 0">
                   <img v-show="user.avatar" :src="user.avatar" >
-                  <span style="font-size: 12px; text-align: left;">{{ user.name }}</span>
+                    <div align="left">
+                      <span style="font-size: 12px; ">{{ user.name }}</span>
+                    </div>
                 </li>
               </ul>
             </div>
             <fieldset class="rating">
-              <input type="checkbox" :id="`star${task.id}`" name="rating" :value="task.id" />
-              <label :for="`star${task.id}`"></label>
+              <input type="checkbox" :id="`star${todo.id}`" name="rating" :value="todo.id" />
+              <label :for="`star${todo.id}`"></label>
               </fieldset>
             <button
               class="btn task-action-trash"
-              @click="load(taskActions.delete, task)"
+              @click="load(todoActions.delete, todo)"
             >
               <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
@@ -42,20 +45,20 @@
         </li>
       </ul>
     </template>
-  </TaskActions>
+  </TodoActions>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import TaskActions from '@/components/TaskActions'
+import TodoActions from '@/components/TodoActions'
 
 export default {
-  name: 'TaskItem',
+  name: 'TodoItem',
   components: {
-    TaskActions
+    TodoActions
   },
   props: {
-    task: { type: Object, required: true }
+    todo: { type: Object, required: true }
   },
   data() {
     return {
@@ -68,19 +71,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(["tasks", "users"]),
-  },
-  mounted() {
-    this.$store.dispatch('users/setUsers')
+    ...mapState(["todos", "users"]),
   },
   methods: {
     routeTo(id) {
-      this.$router.push(`tasks/${id}`)
+      this.$router.push(`todos/${id}`)
     },
     checkTask(value) {
       return (this.taskStatus = value ? false : true)
     },
     getUsersData(){
+      this.$store.dispatch('users/setUsers')
       this.searchResultsList = this.userList = this.users.users;
       this.pop = !this.pop
     },
@@ -121,13 +122,14 @@ export default {
 }
 
 .btn {
-  background-color: transparent;
-  border: none; 
-  font-size: 16px; 
-  cursor: pointer; 
+  background-color: transparent; /* Blue background */
+  border: none; /* Remove borders */
+  font-size: 16px; /* Set a font size */
+  cursor: pointer; /* Mouse pointer on hover */
   color: #dadada;
 }
 
+/* Darker background on mouse-over */
 .task-action-trash :hover {
   color: rgb(255, 75, 75);
 }
@@ -142,6 +144,13 @@ export default {
   align-items: right;
   font-size: 1.4rem;
   width: 10%;
+}
+
+img {
+  margin-top: .2em;
+  border-radius: 50%;
+  height: 20%;
+  width: 20%;
 }
 
 .card {
@@ -179,9 +188,11 @@ tr.highlighted {
     -ms-flex-pack: distribute;
         justify-content: space-around;
     border: 1px solid #ccc;
+    border-radius: 50px;
     text-align: center;
     margin-top: 1%;
 }
+
 .search-bar i {
     margin: 0;
     padding: 0;
@@ -194,26 +205,18 @@ tr.highlighted {
             flex-grow: 1;
     margin: 10px;
 }
+
 input {
     margin: 5px 5px;
     width: 90%;
     border: none;
     padding: 1px 0;
     outline: none;
-    font-size: .8em;
+    font-size: 1em;
     color: #888;
     -webkit-box-flex: 2;
         -ms-flex-positive: 2;
             flex-grow: 2;
-}
-
-.flex-container {
-  display: flex;
-}
-
-.flex-container > span {
-  margin: 10px;
-  font-size: 30px;
 }
 
 .rating {
@@ -248,13 +251,6 @@ input {
 }
 .rating > label:active {
     position:relative;
-}
-
-img {
-  margin-top: .2em;
-  border-radius: 50%;
-  height: 20%;
-  width: 20%;
 }
 
 </style>

@@ -10,7 +10,7 @@ import LandingPage from '@/components/LandingPage'
 export default {
   components: { LandingPage },
   async fetch({ store }) {
-    await store.dispatch('tasks/setTasks')
+    await store.dispatch('todos/setTodos')
   }
 }
 </script>

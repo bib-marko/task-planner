@@ -3,10 +3,10 @@
       <div>
         <h1 class="title">Task Planner</h1>
         <section class="tasks-list">
-          <TaskList />
+          <TodoList />
   
           <section class="create-todo">
-            <TaskInput />
+            <TodoInput />
           </section>
         </section>
       </div>
@@ -14,13 +14,13 @@
   </template>
   
   <script>
-  import TaskList from '@/components/TaskList'
-  import TaskInput from '@/components/TaskInput'
+  import TodoList from '@/components/TodoList'
+  import TodoInput from '@/components/TodoInput.vue'
   
   export default {
-    components: { TaskList, TaskInput },
+    components: { TodoList, TodoInput },
     async fetch({ store }) {
-      await store.dispatch('tasks/setTasks')
+      await store.dispatch('todos/setTodos')
     },
   }
   </script>
