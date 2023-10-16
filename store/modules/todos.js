@@ -30,7 +30,6 @@ export const actions = {
     const { data } = await this.$axios.get(
       'https://63906a8d65ff41831112cdd1.mockapi.io/api/v1/tasks'
     )
-    console.log('module = ', data);
     if (data) commit('SET_TODOS', data)
   },
   async addTodo({ commit }, todo) {

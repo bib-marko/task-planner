@@ -17,7 +17,6 @@
           <span class="choice-list__aside">
             <img v-show="todo.assignee.avatar" :src="todo.assignee.avatar" alt="Italian Trulli" @click="getUsersData" >
             <div v-show="pop === true" class="box">
-            <!-- <h3>{{ users }}</h3> -->
               <div class="search-bar">
                   <i class="fa fa-search" aria-hidden="true"></i>
                   <input type="text" v-model="searchTasks" placeholder="search" @keyup.enter="save" autocomplete="false">
@@ -73,6 +72,9 @@ export default {
   computed: {
     ...mapState(["todos", "users"]),
   },
+  // mounted() {
+  //    this.$store.dispatch('users/setUsers')
+  // },
   methods: {
     routeTo(id) {
       this.$router.push(`todos/${id}`)
@@ -81,13 +83,38 @@ export default {
       return (this.taskStatus = value ? false : true)
     },
     getUsersData(){
-      this.$store.dispatch('users/setUsers')
-      this.searchResultsList = this.userList = this.users.users;
-      this.pop = !this.pop
+      if(this.searchResultsList == null){
+        let timerInterval;
+          this.$swal({
+            title: 'Fetching all users...',
+            html: 'I will close in <b></b> milliseconds.',
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: async () => {
+              this.$store.dispatch('users/setUsers')
+              const b = this.$swal.getHtmlContainer().querySelector('b')
+              timerInterval = setInterval(() => {
+                b.textContent = this.$swal.getTimerLeft()
+
+              }, 100)
+            },
+            willClose: () => {
+              clearInterval(timerInterval)
+            }
+          }).then((result) => {
+            if (result.dismiss === this.$swal.DismissReason.timer) {
+               this.searchResultsList = this.userList = this.users.users;
+               this.pop = !this.pop  
+            }
+          })
+      }else{
+        this.searchResultsList = this.userList = this.users.users;
+        this.pop = !this.pop  
+      }
+ 
     },
     searchDataFilter() {
       const data = this.userList;
-      console.log(this.searchTasks.toLowerCase())
       if(this.searchTasks.toLowerCase() !== ''){
         const results = data.filter((item, i) => {
           if (item.name.toLowerCase().indexOf(this.searchTasks.toLowerCase()) > -1) {
@@ -252,5 +279,25 @@ input {
 .rating > label:active {
     position:relative;
 }
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #292929;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+  } 
 
 </style>
