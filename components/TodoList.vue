@@ -75,12 +75,11 @@ export default {
     filterButton(typeOfFilter){
       console.log(typeOfFilter)
       if (typeOfFilter === 'Important'){
-        this.searchResultsList = this.todos.filter(todo => !todo.is_important)
+        this.searchResultsList = this.todos.filter(todo => todo.is_important)
         return  this.searchResultsList;
       }
       if (typeOfFilter === 'Done'){
         this.searchResultsList = this.todos.filter(todo => todo.is_done)
-
         return  this.searchResultsList;
       }
       if (typeOfFilter === 'All'){

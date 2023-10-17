@@ -44,7 +44,7 @@ export default {
             timerProgressBar: true,
             didOpen: async () => {
               this.$swal.showLoading()
-              let todo = { ...this.newTodo }
+              let todo = { ...this.newTodo, is_important: Math.random() < 0.5, is_done: Math.random() < 0.5 }
               this.newTodo.title = ''
               await this.addTodo(todo)
               if($nuxt.$route.name === 'index'){
