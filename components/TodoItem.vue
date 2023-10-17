@@ -72,9 +72,6 @@ export default {
   computed: {
     ...mapState(["todos", "users"]),
   },
-  // mounted() {
-  //    this.$store.dispatch('users/setUsers')
-  // },
   methods: {
     routeTo(id) {
       this.$router.push(`todos/${id}`)
@@ -83,14 +80,35 @@ export default {
       return (this.taskStatus = value ? false : true)
     },
     getUsersData(){
-      if(this.searchResultsList == null){
-        this.$store.dispatch('users/setUsers')
-        this.searchResultsList = this.userList = this.users.users;
-        this.pop = !this.pop  
+      if(this.searchResultsList === null){
+        let timerInterval;
+          this.$swal({
+            title: 'Fetching all users...',
+            html: 'I will close in <b></b> milliseconds.',
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: async () => {
+              this.$store.dispatch('users/setUsers')
+              const b = this.$swal.getHtmlContainer().querySelector('b')
+              timerInterval = setInterval(() => {
+                b.textContent = this.$swal.getTimerLeft()
+
+              }, 100)
+            },
+            willClose: () => {
+              clearInterval(timerInterval)
+            }
+          }).then((result) => {
+            if (result.dismiss === this.$swal.DismissReason.timer) {
+               this.searchResultsList = this.userList = this.users.users;
+               this.pop = !this.pop  
+            }
+          })
       }else{
         this.searchResultsList = this.userList = this.users.users;
         this.pop = !this.pop  
       }
+ 
     },
     searchDataFilter() {
       const data = this.userList;
